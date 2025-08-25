@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🛒 Lista de Compras</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #4caf50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    main {
+      padding: 1rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    button {
+      background: #4caf50;
+      border: none;
+      color: white;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button:hover {
+      background: #43a047;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: white;
+      margin-bottom: 0.5rem;
+      padding: 0.7rem;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    li.completado span {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .acciones button {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>🛒 Lista de Compras</header>
+  <main>
+    <form id="formulario">
+      <input type="text" id="producto" placeholder="Agregar producto..." required />
+      <button type="submit">➕</button>
+    </form>
+    <ul id="lista"></ul>
+  </main>
+
+  <script>
+    const formulario = document.getElementById("formulario");
+    const input = document.getElementById("producto");
+    const lista = document.getElementById("lista");
+
+    // Cargar lista desde localStorage
+    let productos = JSON.parse(localStorage.getItem("productos")) || [];
+
+    // Renderizar lista
+    function renderLista() {
+      lista.innerHTML = "";
+      productos.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.className = item.completado ? "completado" : "";
+
+        const span = document.createElement("span");
+        span.textContent = item.nombre;
+        span.onclick = () => toggleProducto(index);
+
+        const acciones = document.createElement("div");
+        acciones.className = "acciones";
+
+        const btnBorrar = document.createElement("button");
+        btnBorrar.innerHTML = "🗑️";
+        btnBorrar.onclick = () => borrarProducto(index);
+
+        acciones.appendChild(btnBorrar);
+        li.appendChild(span);
+        li.appendChild(acciones);
+        lista.appendChild(li);
+      });
+      guardar();
+    }
+
+    // Guardar en localStorage
+    function guardar() {
+      localStorage.setItem("productos", JSON.stringify(productos));
+    }
+
+    // Agregar producto
+    formulario.addEventListener("submit", e => {
+      e.preventDefault();
+      if (input.value.trim() !== "") {
+        productos.push({ nombre: input.value.trim(), completado: false });
+        input.value = "";
+        renderLista();
+      }
+    });
+
+    // Marcar como completado
+    function toggleProducto(index) {
+      productos[index].completado = !productos[index].completado;
+      renderLista();
+    }
+
+    // Borrar producto
+    function borrarProducto(index) {
+      productos.splice(index, 1);
+      renderLista();
+    }
+
+    // Inicializar
+    renderLista();
+  </script>
+</body>
+</html>
