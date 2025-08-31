@@ -7,14 +7,6 @@
   <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4caf50">
 
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js")
-      .then(() => console.log("✅ Service Worker registrado"))
-      .catch(err => console.log("❌ Error al registrar SW:", err));
-  }
-</script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -156,6 +148,14 @@
 
     // Inicializar
     renderLista();
+  </script>
+
+  <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(() => console.log("✅ Service Worker registrado"))
+      .catch(err => console.log("❌ Error al registrar SW:", err));
+  }
   </script>
 </body>
 </html>
